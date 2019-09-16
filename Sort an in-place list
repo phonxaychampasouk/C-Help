@@ -1,0 +1,84 @@
+//read documentation on CompareTo
+//not in place
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace ConsoleApp4
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            var list = new List<int> { 7, 9, 2, 5, 8, 21, 8, 2, 1 };
+
+            foreach (var v in Sort(list))
+            {
+                Console.WriteLine(v);
+            }
+            foreach (var s in Sort(new List<string>
+                                        {"Cat",
+                                        "Aardvark",
+                                        "Bear",
+                                        "Goat"
+                                        }
+                                        ))
+            {
+                Console.WriteLine(s);
+            }
+        }
+
+        private static List<T> Sort<T>(List<T> list) where T : IComparable<T>
+        {
+            if (list == null || list.Count <= 1) return list;
+
+            var left = new List<T>();  // less than
+            var right = new List<T>();  // greater than
+
+
+            var pivot = list[0]; // pivot is at the start of the list
+
+            for (int i = 1; i < list.Count; ++i)
+            {
+                // compare list and put in left or right
+                var listItem = list[i];
+                var order = listItem.CompareTo(pivot); //Comparing list item to pivot
+
+                if (order <= 0)
+                {
+                    left.Add(listItem);
+                }
+                else
+                {
+                    right.Add(listItem);
+                }
+            }
+
+            var sortedLeft = Sort(left);
+            var sortedRight = Sort(right);
+
+            var final = sortedLeft;
+            final.Add(pivot);
+            final.AddRange(sortedRight);
+
+            return final;
+        }
+    }
+}
+
+Output:
+1
+2
+2
+5
+7
+8
+8
+9
+21
+Aardvark
+Bear
+Cat
+Goat
+
+
