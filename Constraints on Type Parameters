@@ -1,0 +1,30 @@
+IComparable*
+
+
+
+interface IComparable<T>
+{
+	 boot LessOrEqual(T first, T second);
+}
+
+static class SortingClass
+{
+	static List<T> Sort<T>(List<T> ls) where T : IComparable<T>
+		{
+			var finalList = new List<T>();
+
+			//Implementation using CompareTo() here
+
+			return finalList;
+		}
+}
+ 
+void Main()
+{	
+	var list = new List<int> {1, 2, 3, 4, 5};
+
+ 	foreach(var v in Sort(list))
+ 		Console.Writeline(v;)
+}
+
+//Read Documentation on Constraints on type Parameters
