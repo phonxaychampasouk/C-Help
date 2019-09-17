@@ -1,0 +1,99 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace CategoryTheory
+{
+    interface IMonoid<T>
+    {
+        T Mempty { get; }
+        T Mappend(T other);
+
+    }
+    class IntergerAddition : IMonoid<IntergerAddition>
+    {
+        private IntergerAddition(int value)
+        {
+            Value = value;
+        }
+
+        public int Value { get; }
+
+        public IntergerAddition Mempty => Pack(0);
+
+        public IntergerAddition Mappend(IntergerAddition other) => Pack(Value + other.Value);
+
+        public static IntergerAddition Pack(int i) => new IntergerAddition(i);
+    }
+    class IntergerMultiplication : IMonoid<IntergerMultiplication>
+    {
+        private IntergerMultiplication(int value)
+        {
+            Value = value;
+        }
+
+        public int Value { get; }
+        public IntergerMultiplication Mempty => Pack(1);
+
+        public IntergerMultiplication Mappend(IntergerMultiplication other) => Pack(Value * other.Value);
+
+        public static IntergerMultiplication Pack(int i) => new IntergerMultiplication(i);
+    }
+    class StringMonoid : IMonoid<StringMonoid>
+    {
+        private StringMonoid(string value)
+        {
+            Value = value;
+        }
+
+        public string Value { get; }
+
+        public StringMonoid Mempty => Pack("");
+
+        public StringMonoid Mappend(StringMonoid other) => Pack(Value + other.Value);
+
+        public static StringMonoid Pack(string s) => new StringMonoid(s);
+
+    }
+
+
+    class Program
+    {
+        static T Id<T>(T t) => t;
+
+        static T Mconcrat<T>(IEnumerable<T> list) where T : IMonoid<T>
+        {
+            if (list == null || !list.Any()) return default;
+
+            T accum = list.First().Mempty;
+
+            foreach (var v in list)
+            {
+                accum = accum.Mappend(v);
+            }
+            return accum;
+        }
+
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Hello World!".Select(Id).ToArray());
+
+            var ints = Enumerable.Range(1, 10).ToList();
+
+            Console.WriteLine(Mconcrat(
+                ints.Select(IntergerAddition.Pack))
+                .Value);
+            Console.WriteLine(Mconcrat(
+                ints.Select(IntergerMultiplication.Pack))
+                .Value);
+            Console.WriteLine(Mconcrat(
+                ints.Select(i => StringMonoid.Pack(i.ToString())))
+                .Value);
+
+
+        }
+
+    }
+
+}
+
